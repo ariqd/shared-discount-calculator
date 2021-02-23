@@ -22,7 +22,7 @@ const ProductInput = (props) => {
       <TextInput
         style={styles.input}
         placeholder="Harga sebelum PPN (Rp)"
-        onChangeText={(text) => setPrice(text)}
+        onChangeText={(text) => setPrice(Number(text))}
         keyboardType="numeric"
       />
     </View>
