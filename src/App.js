@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,12 +6,46 @@ import {
   View,
   Button,
   ScrollView,
-  Dimensions,
 } from 'react-native';
-
-const {height} = Dimensions.get('window');
+import ProductInput from './components/ProductInput';
 
 export default function App() {
+  const [productsCount, setProductsCount] = useState(0);
+  const [peopleCount, setPeopleCount] = useState(0);
+  const [deliveryFee, setDeliveryFee] = useState(0);
+  const [discount, setDiscount] = useState(0);
+  const [tax, setTax] = useState(0);
+  const [products, setProducts] = useState([]);
+
+  const loopProducts = () => {
+    let content = [];
+    for (let i = 0; i < productsCount; i++) {
+      content.push(
+        <ProductInput
+          key={i}
+          count={i + 1}
+          onProductUpdate={onProductUpdate}
+        />,
+      );
+    }
+    return content;
+  };
+
+  const onProductUpdate = (index, value) => {
+    setProducts((prevState) => ({...prevState, [index]: value}));
+  };
+
+  const onSubmit = () => {
+    console.log(
+      productsCount,
+      peopleCount,
+      deliveryFee,
+      discount,
+      tax,
+      products,
+    );
+  };
+
   return (
     <ScrollView
       contentContainerStyle={styles.container}
@@ -20,54 +54,51 @@ export default function App() {
         <Text style={styles.header}>Shared Discount Calculator</Text>
         <View style={styles.hr} />
         <View style={styles.inputContainer}>
+          <Text style={styles.label}>Jumlah Orang Pesan</Text>
+          <TextInput
+            style={styles.input}
+            keyboardType="number-pad"
+            onChangeText={(text) => setPeopleCount(text)}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Diskon (Rp)</Text>
+          <TextInput
+            style={styles.input}
+            keyboardType="number-pad"
+            onChangeText={(text) => setDiscount(text)}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Ongkos Kirim (Rp)</Text>
+          <TextInput
+            style={styles.input}
+            keyboardType="number-pad"
+            onChangeText={(text) => setDeliveryFee(text)}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Total PPN (%)</Text>
+          <TextInput
+            style={styles.input}
+            keyboardType="number-pad"
+            onChangeText={(text) => setTax(text)}
+          />
+        </View>
+        <View style={styles.inputContainer}>
           <Text style={styles.label}>Jumlah Produk</Text>
-          <TextInput style={styles.input} />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Ongkos Kirim</Text>
-          <TextInput style={styles.input} />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Nominal Diskon (Rp)</Text>
-          <TextInput style={styles.input} />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={[styles.header2, {marginBottom: 10}]}>Produk 1</Text>
           <TextInput
             style={styles.input}
-            placeholder="Nama Produk (Opsional)"
+            keyboardType="number-pad"
+            onChangeText={(text) => setProductsCount(text)}
           />
-          <TextInput style={styles.input} placeholder="Harga (Rp)" />
         </View>
+        {loopProducts()}
         <View style={styles.inputContainer}>
-          <Text style={[styles.header2, {marginBottom: 10}]}>Produk 2</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Nama Produk (Opsional)"
+          <Button
+            title="Hitung Harga Produk Setelah Diskon"
+            onPress={() => onSubmit()}
           />
-          <TextInput style={styles.input} placeholder="Harga (Rp)" />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={[styles.header2, {marginBottom: 10}]}>Produk 3</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Nama Produk (Opsional)"
-          />
-          <TextInput style={styles.input} placeholder="Harga (Rp)" />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={[styles.header2, {marginBottom: 10}]}>Produk 4</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Nama Produk (Opsional)"
-          />
-          <TextInput style={styles.input} placeholder="Harga (Rp)" />
-        </View>
-        {/* <View style={styles.inputContainer}>
-          <Button title="Tambah Produk" />
-        </View> */}
-        <View style={styles.inputContainer}>
-          <Button title="Hitung Harga Produk Setelah Diskon" />
         </View>
         <View style={styles.inputContainer}>
           <Button title="Reset" />
@@ -90,7 +121,7 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 20,
     fontWeight: 'bold',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   header2: {
     fontSize: 20,
