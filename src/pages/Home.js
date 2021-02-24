@@ -18,22 +18,34 @@ export default function App(props) {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    // setProducts([]);
+    if (productsCount === 0 || productsCount === '') {
+      setProducts([]);
+    }
     return () => {
       setProducts([]);
     };
-  }, []);
+  }, [productsCount]);
 
   const loopProducts = () => {
     let content = [];
-    for (let i = 0; i < productsCount; i++) {
+    if (productsCount > 10) {
       content.push(
-        <ProductInput
-          key={i}
-          count={i + 1}
-          onProductUpdate={onProductUpdate}
-        />,
+        <Text
+          style={{color: 'red', marginBottom: 20, textAlign: 'center'}}
+          key="maxExceeded">
+          Maksimal 10 produk!
+        </Text>,
       );
+    } else {
+      for (let i = 0; i < productsCount; i++) {
+        content.push(
+          <ProductInput
+            key={i}
+            count={i + 1}
+            onProductUpdate={onProductUpdate}
+          />,
+        );
+      }
     }
     return content;
   };
@@ -45,15 +57,6 @@ export default function App(props) {
   };
 
   const onSubmit = () => {
-    // console.log({
-    //   productsCount,
-    //   peopleCount,
-    //   deliveryFee,
-    //   discount,
-    //   tax,
-    //   products,
-    // });
-
     props.navigation.navigate('Result', {
       productsCount,
       peopleCount,
@@ -76,7 +79,7 @@ export default function App(props) {
           <TextInput
             style={styles.input}
             keyboardType="number-pad"
-            onChangeText={(text) => setPeopleCount(text)}
+            onChangeText={(text) => setPeopleCount(Number(text))}
             defaultValue="1"
           />
         </View>
@@ -85,7 +88,7 @@ export default function App(props) {
           <TextInput
             style={styles.input}
             keyboardType="number-pad"
-            onChangeText={(text) => setDiscount(text)}
+            onChangeText={(text) => setDiscount(Number(text))}
           />
         </View>
         <View style={styles.inputContainer}>
@@ -93,7 +96,7 @@ export default function App(props) {
           <TextInput
             style={styles.input}
             keyboardType="number-pad"
-            onChangeText={(text) => setDeliveryFee(text)}
+            onChangeText={(text) => setDeliveryFee(Number(text))}
           />
         </View>
         <View style={styles.inputContainer}>
@@ -101,7 +104,7 @@ export default function App(props) {
           <TextInput
             style={styles.input}
             keyboardType="number-pad"
-            onChangeText={(text) => setTax(text)}
+            onChangeText={(text) => setTax(Number(text))}
             defaultValue="0"
           />
         </View>
@@ -110,7 +113,7 @@ export default function App(props) {
           <TextInput
             style={styles.input}
             keyboardType="number-pad"
-            onChangeText={(text) => setProductsCount(text)}
+            onChangeText={(text) => setProductsCount(Number(text))}
           />
         </View>
         {loopProducts()}
@@ -120,9 +123,9 @@ export default function App(props) {
             onPress={() => onSubmit()}
           />
         </View>
-        <View style={styles.inputContainer}>
+        {/* <View style={styles.inputContainer}>
           <Button title="Reset" />
-        </View>
+        </View> */}
       </View>
     </ScrollView>
   );

@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import ProductResult from '../components/ProductResult';
+import numeral from 'numeral';
 
 export default function Result(props) {
   const {
     productsCount,
-    peopleCount,
+    // peopleCount,
     deliveryFee,
     discount,
     tax,
@@ -14,7 +15,6 @@ export default function Result(props) {
 
   const [grossTotal, setGrossTotal] = useState(0);
   const [netTotal, setNetTotal] = useState(0);
-  // let netTotal = 0;
 
   useEffect(() => {
     setGrossTotal(countGrossTotal());
@@ -39,8 +39,6 @@ export default function Result(props) {
     const delivery = deliveryFee / productsCount;
     const subtotal = price - discTotal;
     const grandTotal = Math.ceil(subtotal + delivery);
-    // console.log(typeof grandTotal);
-    setNetTotal(0);
 
     return {
       discRatio,
@@ -52,27 +50,71 @@ export default function Result(props) {
   };
 
   return (
-    <View>
-      <Text>Discount: {discount}</Text>
-      <Text>Tax: {tax}</Text>
-      <Text>Jumlah Orang Pesan: {peopleCount}</Text>
-      <Text>Ongkir: {deliveryFee}</Text>
-      <Text>Jumlah Produk: {productsCount}</Text>
-      <Text>Gross Total = {grossTotal}</Text>
-      <Text>Net Total = {netTotal}</Text>
-      {Object.entries(products).map(([key, value]) => (
-        <ProductResult
-          key={key}
-          value={value}
-          countGrandTotal={countGrandTotal}
-        />
-      ))}
+    <View style={styles.container}>
+      <View style={styles.row}>
+        <View style={[styles.box, {width: '100%'}]}>
+          <Text style={styles.label}>Net Total</Text>
+          <Text style={{fontSize: 24}}>
+            Rp{numeral(grossTotal - discount + deliveryFee).format()}
+          </Text>
+        </View>
+      </View>
+      <View style={styles.row}>
+        <View style={[styles.box, {width: '30%'}]}>
+          <Text style={styles.label}>Gross Total</Text>
+          <Text style={styles.primaryText}>
+            Rp{numeral(grossTotal).format()}
+          </Text>
+        </View>
+        <View style={[styles.box, {width: '40%'}]}>
+          <Text style={styles.label}>Diskon</Text>
+          <Text style={styles.primaryText}>
+            Rp{numeral(discount).format()} ({(discount / grossTotal) * 100}%)
+          </Text>
+        </View>
+        <View style={[styles.box, {width: '30%'}]}>
+          <Text style={styles.label}>Total PPN</Text>
+          <Text style={styles.primaryText}>Rp0</Text>
+        </View>
+      </View>
+      <ScrollView contentContainerStyle={{padding: 15}}>
+        {Object.entries(products).map(([key, value]) => (
+          <ProductResult
+            key={key}
+            index={key}
+            value={value}
+            countGrandTotal={countGrandTotal}
+            netTotal={netTotal}
+            setNetTotal={setNetTotal}
+          />
+        ))}
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  product: {
-    marginVertical: 10,
+  container: {
+    width: '100%',
+    flex: 1,
+  },
+  row: {
+    flexGrow: 1,
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    alignContent: 'stretch',
+    backgroundColor: 'white',
+  },
+  box: {
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    padding: 15,
+  },
+  label: {
+    fontSize: 12,
+    color: 'gray',
+  },
+  primaryText: {
+    fontSize: 18,
   },
 });
