@@ -59,7 +59,7 @@ export default function Result(props) {
       <View style={styles.row}>
         <View style={[styles.box, {width: '100%'}]}>
           <Text style={styles.label}>Net Total</Text>
-          <Text style={{fontSize: 24}}>
+          <Text style={{fontSize: 24, marginBottom: 0, paddingBottom: 0}}>
             Rp
             {numeral(
               grossTotal + grossTotal * (tax / 100) - discount + deliveryFee,
@@ -77,7 +77,7 @@ export default function Result(props) {
         <View style={[styles.box, {width: '40%'}]}>
           <Text style={styles.label}>Diskon</Text>
           <Text style={styles.primaryText}>
-            Rp{numeral(discount).format()} ({(discount / grossTotal) * 100}%)
+            Rp{numeral(discount).format()} ({((discount / grossTotal) * 100).toFixed(2)}%)
           </Text>
         </View>
         <View style={[styles.box, {width: '30%'}]}>
@@ -118,8 +118,7 @@ const styles = StyleSheet.create({
   box: {
     borderWidth: 1,
     borderColor: '#E0E0E0',
-    paddingHorizontal: 15,
-    paddingTop: 15
+    padding: 15,
   },
   label: {
     fontSize: 12,
