@@ -43,7 +43,7 @@ const ProductResult = (props) => {
       </View>
       <View style={styles.row}>
         <Text style={{color: 'gray'}}>Harga Setelah PPN</Text>
-        <Text>Rp{numeral(price).format()}</Text>
+        <Text>Rp{numeral(price + state.ppn).format()}</Text>
       </View>
       <View style={styles.row}>
         <Text style={{color: 'gray'}}>Rasio Diskon</Text>

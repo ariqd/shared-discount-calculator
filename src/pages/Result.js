@@ -34,11 +34,15 @@ export default function Result(props) {
   };
 
   const countGrandTotal = (price) => {
+    let ppn = 0;
+    if (tax > 0) {
+      ppn = price * (tax / 100);
+    }
     const discRatio = price / grossTotal;
     const discTotal = discRatio * discount;
     const delivery = deliveryFee / productsCount;
     const subtotal = price - discTotal;
-    const grandTotal = Math.ceil(subtotal + delivery);
+    const grandTotal = Math.ceil(subtotal + delivery + ppn);
 
     return {
       discRatio,
@@ -46,6 +50,7 @@ export default function Result(props) {
       delivery,
       subtotal,
       grandTotal,
+      ppn,
     };
   };
 
@@ -55,7 +60,10 @@ export default function Result(props) {
         <View style={[styles.box, {width: '100%'}]}>
           <Text style={styles.label}>Net Total</Text>
           <Text style={{fontSize: 24}}>
-            Rp{numeral(grossTotal - discount + deliveryFee).format()}
+            Rp
+            {numeral(
+              grossTotal + grossTotal * (tax / 100) - discount + deliveryFee,
+            ).format()}
           </Text>
         </View>
       </View>
@@ -74,7 +82,9 @@ export default function Result(props) {
         </View>
         <View style={[styles.box, {width: '30%'}]}>
           <Text style={styles.label}>Total PPN</Text>
-          <Text style={styles.primaryText}>Rp0</Text>
+          <Text style={styles.primaryText}>
+            Rp{numeral(grossTotal * (tax / 100)).format()}
+          </Text>
         </View>
       </View>
       <ScrollView contentContainerStyle={{padding: 15}}>
@@ -108,7 +118,8 @@ const styles = StyleSheet.create({
   box: {
     borderWidth: 1,
     borderColor: '#E0E0E0',
-    padding: 15,
+    paddingHorizontal: 15,
+    paddingTop: 15
   },
   label: {
     fontSize: 12,

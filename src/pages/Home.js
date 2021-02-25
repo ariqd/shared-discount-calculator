@@ -100,7 +100,7 @@ export default function App(props) {
           />
         </View>
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Total PPN (%)</Text>
+          <Text style={styles.label}>PPN (%)</Text>
           <TextInput
             style={styles.input}
             keyboardType="number-pad"
