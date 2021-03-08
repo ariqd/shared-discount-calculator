@@ -6,84 +6,152 @@ import {
   View,
   Button,
   ScrollView,
+  TouchableOpacity,
+  Alert,
 } from 'react-native';
-import ProductInput from '../components/ProductInput';
+import CustomButton from '../components/CustomButton';
+import PeopleInput from '../components/PeopleInput';
+// import ProductInput from '../components/ProductInput';
 
 export default function App(props) {
-  const [productsCount, setProductsCount] = useState(0);
-  const [peopleCount, setPeopleCount] = useState(0);
-  const [deliveryFee, setDeliveryFee] = useState(0);
-  const [discount, setDiscount] = useState(0);
-  const [tax, setTax] = useState(0);
-  const [products, setProducts] = useState([]);
+  // const [productsCount, setProductsCount] = useState(0);
+  const [peopleCount, setPeopleCount] = useState(1);
+  // const [deliveryFee, setDeliveryFee] = useState(0);
+  // const [discount, setDiscount] = useState(0);
+  // const [tax, setTax] = useState(0);
+  const [people, setPeople] = useState([]);
 
-  useEffect(() => {
-    if (productsCount === 0 || productsCount === '') {
-      setProducts([]);
-    }
-    return () => {
-      setProducts([]);
-    };
-  }, [productsCount]);
+  // useEffect(() => {
+  //   if (productsCount === 0 || productsCount === '') {
+  //     setProducts([]);
+  //   }
+  //   return () => {
+  //     setProducts([]);
+  //   };
+  // }, [productsCount]);
 
-  const loopProducts = () => {
+  // const loopProducts = () => {
+  //   let content = [];
+  //   if (productsCount > 10) {
+  //     content.push(
+  //       <Text
+  //         style={{color: 'red', marginBottom: 20, textAlign: 'center'}}
+  //         key="maxExceeded">
+  //         Maksimal 10 produk!
+  //       </Text>,
+  //     );
+  //   } else {
+  //     for (let i = 0; i < productsCount; i++) {
+  //       content.push(
+  //         <ProductInput
+  //           key={i}
+  //           count={i + 1}
+  //           onProductUpdate={onProductUpdate}
+  //         />,
+  //       );
+  //     }
+  //   }
+  //   return content;
+  // };
+
+  // const onProductUpdate = (index, value) => {
+  //   if (value.price > 0) {
+  //     setProducts((prevState) => ({...prevState, [index]: value}));
+  //   }
+  // };
+
+  // const handlePeopleChange = (value) => {
+  //   const parsedQty = Number.parseInt(value);
+  //   if (Number.isNaN(parsedQty)) {
+  //     setPeopleCount(0); //setter for state
+  //   } else if (parsedQty > 10) {
+  //     setPeopleCount(10);
+  //   } else {
+  //     setPeopleCount(parsedQty);
+  //   }
+  // };
+
+  const handlePeopleChange = () => {
+    console.log('Hello');
+
+    setPeopleCount(peopleCount + 1)
+  };
+
+  const loopPeople = () => {
     let content = [];
-    if (productsCount > 10) {
+    if (peopleCount > 10) {
       content.push(
         <Text
           style={{color: 'red', marginBottom: 20, textAlign: 'center'}}
           key="maxExceeded">
-          Maksimal 10 produk!
+          Maksimal 10 orang!
         </Text>,
       );
     } else {
-      for (let i = 0; i < productsCount; i++) {
+      for (let i = 0; i < peopleCount; i++) {
         content.push(
-          <ProductInput
-            key={i}
-            count={i + 1}
-            onProductUpdate={onProductUpdate}
-          />,
+          <PeopleInput key={i} count={i + 1} onPeopleUpdate={onPeopleUpdate} />,
         );
       }
     }
     return content;
   };
 
-  const onProductUpdate = (index, value) => {
-    if (value.price > 0) {
-      setProducts((prevState) => ({...prevState, [index]: value}));
-    }
+  const onPeopleUpdate = (index, value) => {
+    // if (value.price > 0) {
+    setPeople((prevState) => ({...prevState, [index]: value}));
+    // }
   };
 
   const onSubmit = () => {
-    props.navigation.navigate('Result', {
-      productsCount,
-      peopleCount,
-      deliveryFee,
-      discount,
-      tax,
-      products,
-    });
+    if (peopleCount <= 0) {
+      Alert.alert(
+        'Tidak Bisa Melanjutkan',
+        'Jumlah Orang Pesan minimal 1 orang',
+      );
+    } else {
+      props.navigation.navigate('Product', {
+        // productsCount,
+        peopleCount,
+        people,
+        // deliveryFee,
+        // discount,
+        // tax,
+        // products,
+      });
+    }
   };
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.container}
-      keyboardShouldPersistTaps="always">
-      <View style={{flexGrow: 1}}>
-        <Text style={styles.header}>Shared Discount Calculator</Text>
-        <View style={styles.hr} />
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Jumlah Orang Pesan</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="number-pad"
-            onChangeText={(text) => setPeopleCount(Number(text))}
-            defaultValue="1"
-          />
-        </View>
-        <View style={styles.inputContainer}>
+    <>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="always">
+        <View style={{flexGrow: 1}}>
+          {/* <View style={styles.inputContainer}>
+            <Text style={styles.label}>Jumlah Pembeli</Text>
+            <TextInput
+              style={[styles.input, {marginBottom: 0}]}
+              keyboardType="number-pad"
+              // onChangeText={(text) => setPeopleCount(text)}
+              onChangeText={handlePeopleChange}
+              defaultValue="1"
+              maxLength={2}
+              value={peopleCount.toString()}
+            />
+            <Text style={{color: '#909090'}}>Min. 1 orang, max. 10 orang</Text>
+          </View> */}
+          {loopPeople()}
+
+          <View style={styles.inputContainer}>
+            <CustomButton
+              title="Tambah Pembeli"
+              onPress={handlePeopleChange}
+              backgroundColor="#FAFAFA"
+              color="#03A9F4"
+            />
+          </View>
+          {/* <View style={styles.inputContainer}>
           <Text style={styles.label}>Diskon (Rp)</Text>
           <TextInput
             style={styles.input}
@@ -107,8 +175,8 @@ export default function App(props) {
             onChangeText={(text) => setTax(Number(text))}
             defaultValue="0"
           />
-        </View>
-        <View style={styles.inputContainer}>
+        </View> */}
+          {/* <View style={styles.inputContainer}>
           <Text style={styles.label}>Jumlah Produk</Text>
           <TextInput
             style={styles.input}
@@ -116,28 +184,31 @@ export default function App(props) {
             onChangeText={(text) => setProductsCount(Number(text))}
           />
         </View>
-        {loopProducts()}
-        <View style={styles.inputContainer}>
-          <Button
-            title="Hitung Harga Produk Setelah Diskon"
-            onPress={() => onSubmit()}
-          />
-        </View>
-        {/* <View style={styles.inputContainer}>
+        {loopProducts()} */}
+          {/* <View style={styles.inputContainer}>
           <Button title="Reset" />
         </View> */}
+        </View>
+      </ScrollView>
+      <View style={styles.bottomView}>
+        <CustomButton
+          title="Next"
+          onPress={() => onSubmit()}
+          backgroundColor="#1AAE48"
+          color="#ffffff"
+        />
       </View>
-    </ScrollView>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 30,
+    paddingTop: 15,
     paddingHorizontal: 20,
     paddingBottom: 30,
     flexGrow: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#fafafa',
     alignItems: 'stretch',
     justifyContent: 'flex-start',
   },
@@ -163,9 +234,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fefefe',
     marginBottom: 5,
   },
-  hr: {
-    borderWidth: 1,
-    borderColor: 'gainsboro',
-    marginVertical: 15,
+  bottomView: {
+    padding: 15,
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderTopColor: '#E0E0E0',
   },
 });
