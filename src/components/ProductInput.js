@@ -5,14 +5,14 @@ const ProductInput = (props) => {
   const [name, setName] = useState('');
   const [price, setPrice] = useState(0);
 
-  useEffect(() => {
-    props.onProductUpdate(props.count, {name, price});
-  }, [name, price]);
+  // useEffect(() => {
+  //   props.onProductUpdate(props.count, {name, price});
+  // }, [name, price]);
 
   return (
     <View style={styles.inputContainer}>
-      <Text style={[styles.header2, {marginBottom: 10}]}>
-        Produk {props.count}
+      <Text style={[styles.header2, {marginBottom: 5}]}>
+        Produk {props.productIndex + 1}
       </Text>
       <TextInput
         style={styles.input}
@@ -32,18 +32,12 @@ const ProductInput = (props) => {
 export default ProductInput;
 
 const styles = StyleSheet.create({
-  label: {
-    marginBottom: 5,
-  },
-  inputContainer: {
-    marginBottom: 15,
-  },
   input: {
     borderWidth: 1,
     borderRadius: 5,
     padding: 10,
     borderColor: 'gainsboro',
     backgroundColor: '#fefefe',
-    marginBottom: 5,
+    marginTop: 5,
   },
 });

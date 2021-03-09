@@ -52,13 +52,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'gainsboro',
     borderRadius: 5,
+    backgroundColor: '#ffffff'
   },
   input: {
     borderWidth: 1,
     borderRadius: 5,
     padding: 10,
     borderColor: 'gainsboro',
-    backgroundColor: '#fefefe',
+    backgroundColor: '#ffffff',
     marginBottom: 5,
   },
 });

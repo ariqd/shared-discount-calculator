@@ -130,16 +130,16 @@ export default function App(props) {
         'Jumlah Orang Pesan minimal 1 orang',
       );
     } else {
-      console.log(people);
-      // props.navigation.navigate('Product', {
-      //   // productsCount,
-      //   // peopleCount,
-      //   people,
-      //   // deliveryFee,
-      //   // discount,
-      //   // tax,
-      //   // products,
-      // });
+      // console.log(people);
+      props.navigation.navigate('Product', {
+        // productsCount,
+        // peopleCount,
+        people,
+        // deliveryFee,
+        // discount,
+        // tax,
+        // products,
+      });
     }
   };
 
@@ -173,7 +173,7 @@ export default function App(props) {
               <CustomButton
                 title="Tambah Pembeli"
                 onPress={onPeopleAdd}
-                backgroundColor="#FAFAFA"
+                // backgroundColor="#FAFAFA"
                 color="#03A9F4"
               />
             </View>
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 30,
     flexGrow: 1,
-    backgroundColor: '#fafafa',
+    // backgroundColor: '#fafafa',
     alignItems: 'stretch',
     justifyContent: 'flex-start',
   },
