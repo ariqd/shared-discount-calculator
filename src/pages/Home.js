@@ -15,20 +15,26 @@ import PeopleInput from '../components/PeopleInput';
 
 export default function App(props) {
   // const [productsCount, setProductsCount] = useState(0);
-  const [peopleCount, setPeopleCount] = useState(1);
+  // const [peopleCount, setPeopleCount] = useState(1);
   // const [deliveryFee, setDeliveryFee] = useState(0);
   // const [discount, setDiscount] = useState(0);
   // const [tax, setTax] = useState(0);
-  const [people, setPeople] = useState([]);
+  const [people, setPeople] = useState([
+    {
+      id: 1,
+      name: '',
+    },
+  ]);
 
-  // useEffect(() => {
-  //   if (productsCount === 0 || productsCount === '') {
-  //     setProducts([]);
-  //   }
-  //   return () => {
-  //     setProducts([]);
-  //   };
-  // }, [productsCount]);
+  useEffect(() => {
+    console.log(people.length);
+    // setPeople({
+
+    // });
+    // return () => {
+    //   setPeople({});
+    // };
+  }, []);
 
   // const loopProducts = () => {
   //   let content = [];
@@ -60,7 +66,7 @@ export default function App(props) {
   //   }
   // };
 
-  // const handlePeopleChange = (value) => {
+  // const onPeopleAdd = (value) => {
   //   const parsedQty = Number.parseInt(value);
   //   if (Number.isNaN(parsedQty)) {
   //     setPeopleCount(0); //setter for state
@@ -71,15 +77,10 @@ export default function App(props) {
   //   }
   // };
 
-  const handlePeopleChange = () => {
-    console.log('Hello');
-
-    setPeopleCount(peopleCount + 1)
-  };
-
   const loopPeople = () => {
     let content = [];
-    if (peopleCount > 10) {
+
+    if (people.length > 10) {
       content.push(
         <Text
           style={{color: 'red', marginBottom: 20, textAlign: 'center'}}
@@ -88,37 +89,57 @@ export default function App(props) {
         </Text>,
       );
     } else {
-      for (let i = 0; i < peopleCount; i++) {
+      people.map((item, index) => {
         content.push(
-          <PeopleInput key={i} count={i + 1} onPeopleUpdate={onPeopleUpdate} />,
+          <PeopleInput
+            key={item.id}
+            peopleIndex={index}
+            item={item}
+            onPeopleUpdate={onPeopleUpdate}
+            onPeopleDelete={onPeopleDelete}
+          />,
         );
-      }
+      });
     }
+
     return content;
   };
 
-  const onPeopleUpdate = (index, value) => {
-    // if (value.price > 0) {
-    setPeople((prevState) => ({...prevState, [index]: value}));
-    // }
+  const onPeopleAdd = () => {
+    setPeople((prevState) => [
+      ...prevState,
+      {id: prevState.slice(-1).pop().id + 1, name: ''},
+    ]);
+  };
+
+  const onPeopleUpdate = (id, name) => {
+    const peopleIndex = people.findIndex((value) => value.id == id);
+    let newArr = [...people]
+    newArr[peopleIndex] = {id, name}
+    setPeople(newArr)
+  };
+
+  const onPeopleDelete = (id) => {
+    setPeople(people.filter((item) => item.id !== id));
   };
 
   const onSubmit = () => {
-    if (peopleCount <= 0) {
+    if (people.length <= 0) {
       Alert.alert(
         'Tidak Bisa Melanjutkan',
         'Jumlah Orang Pesan minimal 1 orang',
       );
     } else {
-      props.navigation.navigate('Product', {
-        // productsCount,
-        peopleCount,
-        people,
-        // deliveryFee,
-        // discount,
-        // tax,
-        // products,
-      });
+      console.log(people);
+      // props.navigation.navigate('Product', {
+      //   // productsCount,
+      //   // peopleCount,
+      //   people,
+      //   // deliveryFee,
+      //   // discount,
+      //   // tax,
+      //   // products,
+      // });
     }
   };
 
@@ -134,7 +155,7 @@ export default function App(props) {
               style={[styles.input, {marginBottom: 0}]}
               keyboardType="number-pad"
               // onChangeText={(text) => setPeopleCount(text)}
-              onChangeText={handlePeopleChange}
+              onChangeText={onPeopleAdd}
               defaultValue="1"
               maxLength={2}
               value={peopleCount.toString()}
@@ -143,14 +164,21 @@ export default function App(props) {
           </View> */}
           {loopPeople()}
 
-          <View style={styles.inputContainer}>
-            <CustomButton
-              title="Tambah Pembeli"
-              onPress={handlePeopleChange}
-              backgroundColor="#FAFAFA"
-              color="#03A9F4"
-            />
-          </View>
+          {people.length >= 10 ? (
+            <Text style={{color: 'gainsboro', textAlign: 'center'}}>
+              Maksimal 10 orang
+            </Text>
+          ) : (
+            <View style={styles.inputContainer}>
+              <CustomButton
+                title="Tambah Pembeli"
+                onPress={onPeopleAdd}
+                backgroundColor="#FAFAFA"
+                color="#03A9F4"
+              />
+            </View>
+          )}
+
           {/* <View style={styles.inputContainer}>
           <Text style={styles.label}>Diskon (Rp)</Text>
           <TextInput
@@ -191,6 +219,14 @@ export default function App(props) {
         </View>
       </ScrollView>
       <View style={styles.bottomView}>
+        <Text
+          style={{
+            marginBottom: 10,
+            fontSize: 18,
+            fontWeight: 'bold',
+          }}>
+          {people.length} Pembeli
+        </Text>
         <CustomButton
           title="Next"
           onPress={() => onSubmit()}
@@ -235,7 +271,8 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   bottomView: {
-    padding: 15,
+    paddingHorizontal: 20,
+    paddingVertical: 15,
     backgroundColor: '#fff',
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0',

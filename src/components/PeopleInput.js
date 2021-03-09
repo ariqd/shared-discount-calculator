@@ -1,23 +1,40 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, TextInput, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 const PeopleInput = (props) => {
-  const [name, setName] = useState('');
-  //   const [price, setPrice] = useState(0);
+  // const [name, setName] = useState('');
 
-    useEffect(() => {
-      props.onPeopleUpdate(props.count, {name});
-    }, [name]);
+  const updateName = (name) => {
+    props.onPeopleUpdate(props.item.id, name);
+  };
 
   return (
     <View style={styles.inputContainer}>
-      <Text style={[styles.header2, {marginBottom: 10}]}>
-        Pembeli {props.count}
-      </Text>
+      <View
+        style={{
+          marginBottom: 10,
+          flex: 1,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+        <Text style={styles.header2}>Pembeli {props.peopleIndex + 1}</Text>
+        {props.item.id > 1 ? (
+          <TouchableOpacity onPress={() => props.onPeopleDelete(props.item.id)}>
+            <Text style={{color: 'red', fontWeight: 'bold'}}>Hapus</Text>
+          </TouchableOpacity>
+        ) : null}
+      </View>
       <TextInput
         style={styles.input}
         placeholder="Nama (Opsional)"
-        onChangeText={(text) => setName(text)}
+        onChangeText={(text) => updateName(text)}
       />
     </View>
   );
