@@ -28,7 +28,6 @@ export default function App(props) {
 
   useEffect(() => {
     // setPeople({
-
     // });
     // return () => {
     //   setPeople({});
@@ -113,9 +112,9 @@ export default function App(props) {
 
   const onPeopleUpdate = (id, name) => {
     const peopleIndex = people.findIndex((value) => value.id == id);
-    let newArr = [...people]
-    newArr[peopleIndex] = {id, name}
-    setPeople(newArr)
+    let newArr = [...people];
+    newArr[peopleIndex] = {id, name};
+    setPeople(newArr);
   };
 
   const onPeopleDelete = (id) => {
@@ -133,6 +132,7 @@ export default function App(props) {
         // productsCount,
         // peopleCount,
         people,
+        fromPageOne: true,
         // deliveryFee,
         // discount,
         // tax,
@@ -147,19 +147,6 @@ export default function App(props) {
         contentContainerStyle={styles.container}
         keyboardShouldPersistTaps="always">
         <View style={{flexGrow: 1}}>
-          {/* <View style={styles.inputContainer}>
-            <Text style={styles.label}>Jumlah Pembeli</Text>
-            <TextInput
-              style={[styles.input, {marginBottom: 0}]}
-              keyboardType="number-pad"
-              // onChangeText={(text) => setPeopleCount(text)}
-              onChangeText={onPeopleAdd}
-              defaultValue="1"
-              maxLength={2}
-              value={peopleCount.toString()}
-            />
-            <Text style={{color: '#909090'}}>Min. 1 orang, max. 10 orang</Text>
-          </View> */}
           {loopPeople()}
 
           {people.length >= 10 ? (
@@ -171,49 +158,10 @@ export default function App(props) {
               <CustomButton
                 title="Tambah Pembeli"
                 onPress={onPeopleAdd}
-                // backgroundColor="#FAFAFA"
                 color="#03A9F4"
               />
             </View>
           )}
-
-          {/* <View style={styles.inputContainer}>
-          <Text style={styles.label}>Diskon (Rp)</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="number-pad"
-            onChangeText={(text) => setDiscount(Number(text))}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Ongkos Kirim (Rp)</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="number-pad"
-            onChangeText={(text) => setDeliveryFee(Number(text))}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>PPN (%)</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="number-pad"
-            onChangeText={(text) => setTax(Number(text))}
-            defaultValue="0"
-          />
-        </View> */}
-          {/* <View style={styles.inputContainer}>
-          <Text style={styles.label}>Jumlah Produk</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="number-pad"
-            onChangeText={(text) => setProductsCount(Number(text))}
-          />
-        </View>
-        {loopProducts()} */}
-          {/* <View style={styles.inputContainer}>
-          <Button title="Reset" />
-        </View> */}
         </View>
       </ScrollView>
       <View style={styles.bottomView}>

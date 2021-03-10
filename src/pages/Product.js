@@ -13,7 +13,7 @@ import Context from '../context/Context';
 
 const Product = (props) => {
   const {setCurrentPosition} = useContext(Context);
-  const {people} = props.route.params;
+  const {people, fromPageOne} = props.route.params;
   const [products, setProducts] = useState([]);
   const [productsKeys, setProductsKeys] = useState([]);
 
@@ -25,20 +25,23 @@ const Product = (props) => {
   }, []);
 
   useEffect(() => {
-    let array = {};
+    if (fromPageOne) {
+      let array = {};
 
-    people.map((item) => {
-      array[item.id] = [
-        {
-          id: 1,
-          name: '',
-          price: 0,
-        },
-      ];
-    });
+      people.map((item) => {
+        array[item.id] = [
+          {
+            id: 1,
+            name: '',
+            price: 0,
+          },
+        ];
+      });
 
-    setProducts(array);
-    setProductsKeys(Object.keys(array));
+      setProducts(array);
+      setProductsKeys(Object.keys(array));
+    }
+
     return () => {
       setProducts([]);
       setProductsKeys([]);
@@ -107,7 +110,10 @@ const Product = (props) => {
     });
 
     if (priceZero.length >= 1) {
-      Alert.alert('Error', `Terdapat ${priceZero.length} produk dengan harga Rp 0`);
+      Alert.alert(
+        'Error',
+        `Terdapat ${priceZero.length} produk dengan harga Rp 0`,
+      );
     } else {
       props.navigation.navigate('Discount', {
         products,
