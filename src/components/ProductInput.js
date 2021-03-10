@@ -12,8 +12,12 @@ const ProductInput = (props) => {
   const [price, setPrice] = useState(0);
 
   useEffect(() => {
-    // console.log(props);
-  }, []);
+    props.onProductUpdate(props.peopleKey, props.product.id, {name, price});
+  }, [name, price]);
+
+  // const updateProduct = (key, value) => {
+  //   props.onProductUpdate(props.peopleKey, {name, price});
+  // };
 
   return (
     <View style={styles.inputContainer}>
@@ -21,12 +25,14 @@ const ProductInput = (props) => {
         <Text style={[styles.header2, {marginBottom: 5}]}>
           Produk {props.productIndex + 1}
         </Text>
-        {props.product.id > 1 ? (
+        {props.product.id > 1 && (
           <TouchableOpacity
-            onPress={() => props.onProductDelete(props.peopleKey, props.product.id)}>
+            onPress={() =>
+              props.onProductDelete(props.peopleKey, props.product.id)
+            }>
             <Text style={{color: 'red', fontWeight: 'bold'}}>Hapus</Text>
           </TouchableOpacity>
-        ) : null}
+        )}
       </View>
       <TextInput
         style={styles.input}

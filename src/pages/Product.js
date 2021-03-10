@@ -73,6 +73,26 @@ const Product = (props) => {
     setProducts(newProducts);
   };
 
+  const onProductUpdate = (key, id, {name, price}) => {
+    let currentProducts = products[key];
+    let updatedProduct = currentProducts.find((product) => product.id === id);
+    const updatedProductIndex = currentProducts.findIndex(
+      (product) => product.id === id,
+    );
+
+    updatedProduct = {id, name, price};
+
+    let newProducts = {...products};
+
+    newProducts[key][updatedProductIndex] = updatedProduct;
+
+    setProducts(newProducts);
+  };
+
+  const onSubmit = () => {
+    console.log(products);
+  };
+
   return (
     <>
       <ScrollView
@@ -113,7 +133,7 @@ const Product = (props) => {
                           productIndex={index}
                           product={product}
                           peopleKey={key}
-                          // onProductUpdate={onProductUpdate}
+                          onProductUpdate={onProductUpdate}
                           onProductDelete={onProductDelete}
                         />
                       </View>
@@ -127,7 +147,7 @@ const Product = (props) => {
       <View style={styles.bottomView}>
         <CustomButton
           title="Next"
-          // onPress={() => onSubmit()}
+          onPress={() => onSubmit()}
           backgroundColor="#1AAE48"
           color="#ffffff"
         />

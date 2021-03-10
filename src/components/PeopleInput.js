@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,28 +8,17 @@ import {
 } from 'react-native';
 
 const PeopleInput = (props) => {
-  // const [name, setName] = useState('');
-
-  const updateName = (name) => {
-    props.onPeopleUpdate(props.item.id, name);
-  };
+  const updateName = (name) => props.onPeopleUpdate(props.item.id, name);
 
   return (
     <View style={styles.inputContainer}>
-      <View
-        style={{
-          marginBottom: 10,
-          flex: 1,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
+      <View style={styles.inputHeader}>
         <Text style={styles.header2}>Pembeli {props.peopleIndex + 1}</Text>
-        {props.item.id > 1 ? (
+        {props.item.id > 1 && (
           <TouchableOpacity onPress={() => props.onPeopleDelete(props.item.id)}>
             <Text style={{color: 'red', fontWeight: 'bold'}}>Hapus</Text>
           </TouchableOpacity>
-        ) : null}
+        )}
       </View>
       <TextInput
         style={styles.input}
@@ -52,7 +41,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'gainsboro',
     borderRadius: 5,
-    backgroundColor: '#ffffff'
+    backgroundColor: '#ffffff',
+  },
+  inputHeader: {
+    marginBottom: 10,
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   input: {
     borderWidth: 1,
