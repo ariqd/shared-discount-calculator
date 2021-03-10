@@ -5,6 +5,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import ProductInput from '../components/ProductInput';
@@ -54,8 +55,11 @@ const Product = (props) => {
     };
 
     currentProducts.push(newProduct);
+
     let newProducts = {...products};
+
     newProducts[key] = currentProducts;
+
     setProducts(newProducts);
   };
 
@@ -75,7 +79,9 @@ const Product = (props) => {
 
   const onProductUpdate = (key, id, {name, price}) => {
     let currentProducts = products[key];
+
     let updatedProduct = currentProducts.find((product) => product.id === id);
+
     const updatedProductIndex = currentProducts.findIndex(
       (product) => product.id === id,
     );
@@ -89,8 +95,25 @@ const Product = (props) => {
     setProducts(newProducts);
   };
 
-  const onSubmit = () => {
-    console.log(products);
+  const onSubmit = async () => {
+    let priceZero = [];
+
+    productsKeys.map(async (key) => {
+      await products[key].map((product, index) => {
+        if (product.price <= 0) {
+          priceZero.push(product);
+        }
+      });
+    });
+
+    if (priceZero.length >= 1) {
+      Alert.alert('Error', `Terdapat ${priceZero.length} produk dengan harga Rp 0`);
+    } else {
+      props.navigation.navigate('Discount', {
+        products,
+        people,
+      });
+    }
   };
 
   return (
@@ -104,20 +127,8 @@ const Product = (props) => {
                 const owner = people.find((arr) => arr.id === Number(key));
 
                 return (
-                  <View
-                    key={key}
-                    style={{
-                      backgroundColor: '#ffffff',
-                      marginBottom: 10,
-                      borderRadius: 5,
-                    }}>
-                    <View
-                      style={{
-                        padding: 15,
-                        flex: 1,
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
+                  <View key={key} style={styles.productsCard}>
+                    <View style={styles.productsHeader}>
                       <Text style={{fontWeight: 'bold'}}>
                         {owner?.name ? owner?.name : 'Pembeli ' + (index + 1)}
                       </Text>
@@ -164,7 +175,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 30,
     flexGrow: 1,
-    // backgroundColor: '#fafafa',
     alignItems: 'stretch',
     justifyContent: 'flex-start',
   },
@@ -172,6 +182,17 @@ const styles = StyleSheet.create({
     padding: 15,
     borderTopWidth: 1,
     borderTopColor: '#EEEEEE',
+  },
+  productsCard: {
+    backgroundColor: '#ffffff',
+    marginBottom: 10,
+    borderRadius: 5,
+  },
+  productsHeader: {
+    padding: 15,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   bottomView: {
     paddingHorizontal: 20,

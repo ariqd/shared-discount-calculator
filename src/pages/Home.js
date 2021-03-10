@@ -27,7 +27,6 @@ export default function App(props) {
   ]);
 
   useEffect(() => {
-    console.log(people.length);
     // setPeople({
 
     // });
@@ -130,7 +129,6 @@ export default function App(props) {
         'Jumlah Orang Pesan minimal 1 orang',
       );
     } else {
-      // console.log(people);
       props.navigation.navigate('Product', {
         // productsCount,
         // peopleCount,
@@ -244,7 +242,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 30,
     flexGrow: 1,
-    // backgroundColor: '#fafafa',
     alignItems: 'stretch',
     justifyContent: 'flex-start',
   },
