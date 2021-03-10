@@ -44,8 +44,8 @@ const Product = (props) => {
     };
   }, []);
 
-  const onProductAdd = (id) => {
-    let currentProducts = products[id];
+  const onProductAdd = (key) => {
+    let currentProducts = products[key];
 
     const newProduct = {
       id: currentProducts.slice(-1).pop().id + 1,
@@ -54,9 +54,23 @@ const Product = (props) => {
     };
 
     currentProducts.push(newProduct);
-    let newProductsArray = {...products};
-    newProductsArray[id] = currentProducts;
-    setProducts(newProductsArray);
+    let newProducts = {...products};
+    newProducts[key] = currentProducts;
+    setProducts(newProducts);
+  };
+
+  const onProductDelete = (key, id) => {
+    let currentProducts = products[key];
+
+    let filteredProducts = currentProducts.filter(
+      (product) => product.id !== id,
+    );
+
+    let newProducts = {...products};
+
+    newProducts[key] = filteredProducts;
+
+    setProducts(newProducts);
   };
 
   return (
@@ -98,7 +112,9 @@ const Product = (props) => {
                         <ProductInput
                           productIndex={index}
                           product={product}
+                          peopleKey={key}
                           // onProductUpdate={onProductUpdate}
+                          onProductDelete={onProductDelete}
                         />
                       </View>
                     ))}

@@ -1,19 +1,33 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, TextInput, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 const ProductInput = (props) => {
   const [name, setName] = useState('');
   const [price, setPrice] = useState(0);
 
-  // useEffect(() => {
-  //   props.onProductUpdate(props.count, {name, price});
-  // }, [name, price]);
+  useEffect(() => {
+    // console.log(props);
+  }, []);
 
   return (
     <View style={styles.inputContainer}>
-      <Text style={[styles.header2, {marginBottom: 5}]}>
-        Produk {props.productIndex + 1}
-      </Text>
+      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <Text style={[styles.header2, {marginBottom: 5}]}>
+          Produk {props.productIndex + 1}
+        </Text>
+        {props.product.id > 1 ? (
+          <TouchableOpacity
+            onPress={() => props.onProductDelete(props.peopleKey, props.product.id)}>
+            <Text style={{color: 'red', fontWeight: 'bold'}}>Hapus</Text>
+          </TouchableOpacity>
+        ) : null}
+      </View>
       <TextInput
         style={styles.input}
         placeholder="Nama Produk (Opsional)"
