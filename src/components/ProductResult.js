@@ -10,6 +10,7 @@ const ProductResult = (props) => {
   useEffect(() => {
     setName(props.value.name);
     setPrice(props.value.price);
+    console.log(props)
     return () => {
       setName('');
       setPrice(0);
