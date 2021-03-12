@@ -12,7 +12,7 @@ import CustomButton from '../components/CustomButton';
 import Context from '../context/Context';
 
 const Discount = (props) => {
-  const {people, products} = props.route.params;
+  const {people, products, productsKeys} = props.route.params;
   const [deliveryFee, setDeliveryFee] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [tax, setTax] = useState(0);
@@ -53,6 +53,7 @@ const Discount = (props) => {
     props.navigation.navigate('Result', {
       people,
       products,
+      productsKeys,
       discount,
       tax,
       deliveryFee,

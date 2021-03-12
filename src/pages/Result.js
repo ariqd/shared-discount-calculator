@@ -6,27 +6,22 @@ import Context from '../context/Context';
 
 export default function Result(props) {
   const {
-    productsCount,
+    // productsCount,
     // peopleCount,
     deliveryFee,
     discount,
     isPercent,
     tax,
     products,
+    productsKeys,
     people,
   } = props.route.params;
 
   const [grossTotal, setGrossTotal] = useState(0);
-  const [netTotal, setNetTotal] = useState(0);
   const {setCurrentPosition} = useContext(Context);
-
-  // useEffect(() => {
-  //   console.log(products);
-  // }, []);
-
-  // useEffect(() => {
-  //   console.log()
-  // }, []);
+  const [allDiscounts, setAllDiscounts] = useState([]);
+  let count = 0;
+  let hello = [];
 
   useEffect(() => {
     setGrossTotal(countGrossTotal());
@@ -50,14 +45,32 @@ export default function Result(props) {
     return gross;
   };
 
-  const countGrandTotal = (price) => {
+  const productsCount = () => {
+    let productsCount = 0;
+
+    productsKeys.map((key) => {
+      productsCount += products[key].length;
+    });
+
+    return productsCount;
+  };
+
+  const ppnTotal = () => {
     let ppn = 0;
+
     if (tax > 0) {
       ppn = price * (tax / 100);
     }
+
+    return ppn;
+  };
+
+  const countGrandTotal = (price) => {
+    const ppn = ppnTotal();
     const discRatio = price / grossTotal;
-    const discTotal = discRatio * discount;
-    const delivery = deliveryFee / productsCount;
+    const discountType = isPercent ? discount / 100 : discount;
+    const discTotal = discRatio * discountType;
+    const delivery = deliveryFee / productsCount();
     const subtotal = price - discTotal;
     const grandTotal = Math.ceil(subtotal + delivery + ppn);
 
@@ -72,7 +85,7 @@ export default function Result(props) {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.row}>
         <View style={[styles.box, {width: '30%'}]}>
           <Text style={styles.label}>Gross Total</Text>
@@ -82,10 +95,14 @@ export default function Result(props) {
         </View>
         <View style={[styles.box, {width: '40%'}]}>
           <Text style={styles.label}>Diskon</Text>
-          <Text style={styles.primaryText}>
-            Rp{numeral(discount).format()} (
-            {((discount / grossTotal) * 100).toFixed(2)}%)
-          </Text>
+          {isPercent ? (
+            <Text style={styles.primaryText}>{discount} %</Text>
+          ) : (
+            <Text style={styles.primaryText}>
+              Rp{numeral(discount).format()} (
+              {((discount / grossTotal) * 100).toFixed(2)}%)
+            </Text>
+          )}
         </View>
         <View style={[styles.box, {width: '30%'}]}>
           <Text style={styles.label}>Total PPN</Text>
@@ -105,10 +122,16 @@ export default function Result(props) {
           </Text>
         </View>
       </View>
-      <ScrollView contentContainerStyle={{padding: 15}}>
+      <View style={{padding: 15}}>
         {Object.keys(products).map((key, index) => {
-          // console.log(product)
           const owner = people.find((arr) => arr.id === Number(key));
+          const sum = products[key].reduce((a, {price}) => a + price, 0);
+          let sumDiscount = 0;
+          console.log(sumDiscount);
+          // let finalDiscount = 0;
+          // console.log(allDiscounts);
+          // let count = 0;
+          // console.log(hello)
 
           return (
             <View key={key} style={styles.ownerCard}>
@@ -116,24 +139,36 @@ export default function Result(props) {
                 <Text style={{fontWeight: 'bold'}}>
                   {owner?.name ? owner?.name : 'Pembeli ' + (index + 1)}
                 </Text>
-                {/* <TouchableOpacity onPress={() => onProductAdd(key)}> */}
-                <Text style={{color: '#03A9F4', fontWeight: 'bold'}}>
-                  Tambah Produk
+                <Text style={{color: '#212121', marginLeft: 3}}>
+                  cuma bayar {sumDiscount} dari Rp{numeral(sum).format()}
                 </Text>
-                {/* </TouchableOpacity> */}
               </View>
+              {products[key].map((product, index) => {
+                const total = countGrandTotal(product.price);
+                sumDiscount += total.grandTotal;
+
+                return (
+                  <ProductResult
+                    key={index}
+                    index={index}
+                    product={product}
+                    total={total}
+                  />
+                );
+              })}
+              {setAllDiscounts((prevState) => [...prevState, sumDiscount])}
             </View>
           );
         })}
-      </ScrollView>
-    </View>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    flex: 1,
+    // flex: 1,
   },
   row: {
     flexGrow: 1,
@@ -161,9 +196,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   ownerHeader: {
-    padding: 15,
+    // padding: 15,
+    paddingHorizontal: 15,
+    paddingTop: 10,
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: 'baseline',
+    // justifyContent: 'space-between',
   },
 });

@@ -117,6 +117,7 @@ const Product = (props) => {
     } else {
       props.navigation.navigate('Discount', {
         products,
+        productsKeys,
         people,
       });
     }
